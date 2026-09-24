@@ -1,0 +1,23 @@
+name: Pazargo Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu indir
+        uses: actions/checkout@v4
+
+      - name: Projeyi kontrol et
+        run: |
+          echo "Pazargo build başlatıldı"
+          ls -la
+
+      - name: Build tamamlandı
+        run: echo "Pazargo build işlemi tamamlandı."
