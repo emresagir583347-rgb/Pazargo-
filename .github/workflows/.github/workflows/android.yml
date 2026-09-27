@@ -1,0 +1,48 @@
+name: Pazargo Android Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodları indir
+        uses: actions/checkout@v4
+
+      - name: Java 17 kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK kur
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle kur
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Android paketlerini kur
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: APK ve AAB oluştur
+        run: |
+          gradle assembleDebug
+          gradle bundleRelease
+
+      - name: APK yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pazargo-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: AAB yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pazargo-AAB
+          path: app/build/outputs/bundle/release/app-release.aab
